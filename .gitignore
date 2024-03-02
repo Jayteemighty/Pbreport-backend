@@ -3,4 +3,9 @@
 accounts/__pycache__
 orders/__pycache__
 products/__pycache__
-projects/__pycache__
+project/__pycache__
+
+accounts/__init__.py
+orders/
+products/
+project/
