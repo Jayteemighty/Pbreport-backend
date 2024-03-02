@@ -160,10 +160,10 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTHENTICATION_BACKENDS = [ 
-
-    'accounts.backend.EmailOrUsernameLogin'            
-] 
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "accounts.backends.EmailBackend",
+)
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': 'django_filters.rest_framework.DjangoFilterBackend',
