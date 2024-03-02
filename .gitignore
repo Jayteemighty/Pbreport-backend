@@ -1,3 +1,6 @@
 .env
 
-__pycache__
+accounts/__pycache__
+orders/__pycache__
+products/__pycache__
+projects/__pycache__
