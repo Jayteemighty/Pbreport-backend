@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-_4zk#)lh_glf3les+00wdyff6v#)25=t9s*++l-wuc!)c3mb4_"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True #remove before production
 
 ALLOWED_HOSTS = []
 
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'djoser',
     'drf_spectacular',
     'rest_framework_simplejwt',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -128,6 +129,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://redis:6379",
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -150,3 +159,40 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTHENTICATION_BACKENDS = [ 
+
+    'accounts.backend.EmailOrUsernameLogin'            
+] 
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': 'django_filters.rest_framework.DjangoFilterBackend',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
+}
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema", 
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # Other authentication classes...
+    ),}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "E commerce backend",
+    }
+
+# Celery settings
+CELERY_BROKER_URL = config("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND")
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+
+#CELERY_BEAT_SCHEDULE = {
+#    "update_product_prices": {
+#        "task": "product.tasks.update_product_prices",
+#        "schedule": 300,  # Run every 5 minutes (300 seconds)
+#    },
+#}
