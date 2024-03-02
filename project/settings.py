@@ -175,11 +175,17 @@ REST_FRAMEWORK = {
 }
 
 REST_FRAMEWORK = {
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema", 
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema"}
+
+REST_FRAMEWORK = {
+        'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # Other authentication classes...
-    ),}
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "E commerce backend",
