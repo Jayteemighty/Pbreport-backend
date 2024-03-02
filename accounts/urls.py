@@ -1,12 +1,7 @@
 from django.urls import path
-from .views import signup, activate, dashboard
+from . import views
 
-
-app_name = 'accounts'    # set app_name to accounts
 
 urlpatterns = [
-    path('signup/', signup),
-    path('dashboard', dashboard),           
-    path('<str:username>/activate/', activate),          
-
+    path("signup/", views.SignupView.as_view()),
 ]

@@ -1,8 +1,6 @@
 from django.contrib import admin
-from .models import Profile, ContactNumbers, Address
+from accounts.models import User
+
 
 # Register your models here.
-
-admin.site.register(Profile)
-admin.site.register(ContactNumbers)
-admin.site.register(Address)
+admin.site.register(User)
