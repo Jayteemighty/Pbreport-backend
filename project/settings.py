@@ -40,6 +40,17 @@ INSTALLED_APPS = [
     
     #django apps
     'accounts',
+    'orders',
+    'products',
+    
+    #third party apps
+    'rest_framework',
+    'drf_yasg',
+    'corsheaders',
+    'rest_framework.authtoken',
+    'djoser',
+    'drf_spectacular',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
