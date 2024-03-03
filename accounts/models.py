@@ -4,6 +4,10 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from .managers import UserManager
+from django.utils import timezone
+from datetime import timedelta
+from django.db import models
+from django.contrib.auth.models import User
 
 
 class User(AbstractUser):
@@ -60,3 +64,13 @@ class User(AbstractUser):
         blank=True,
         related_name='custom_user_permissions'  # Example related name
     )
+
+
+class OTP(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    otp = models.CharField(max_length=6)
+    expiry_time = models.DateTimeField()
+
+    def set_expiry_time(self):
+        # Set the expiry time to be, for example, 5 minutes from the current time
+        self.expiry_time = timezone.now() + timedelta(minutes=5)

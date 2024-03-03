@@ -5,7 +5,9 @@ from django.contrib.auth.hashers import make_password
 from .serializers import UserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.authtoken.models import Token
-
+from django_otp.oath import TOTP
+from django.core.mail import send_mail
+from django.conf import settings
 
 class SignupView(generics.CreateAPIView):
     serializer_class = UserSerializer
@@ -13,7 +15,8 @@ class SignupView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         password = serializer.validated_data.get('password')
-        
+        email = serializer.validated_data.get('email')
+
         # Hash the password using Django's make_password function
         hashed_password = make_password(password)
         
@@ -21,6 +24,20 @@ class SignupView(generics.CreateAPIView):
         serializer.validated_data['password'] = hashed_password
         
         user = serializer.save()
+
+        # Generate OTP
+        otp = TOTP(settings.SECRET_KEY).token_hex()
+        user.otp_code = otp
+        user.save()
+
+        # Send OTP to user's email
+        send_mail(
+            'OTP Verification',
+            f'Your OTP for signup is: {otp}',
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
 
         token, created = Token.objects.get_or_create(user=user)
 
