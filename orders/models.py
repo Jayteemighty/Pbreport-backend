@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+import requests
 import secrets
 from products.models import Product
 
