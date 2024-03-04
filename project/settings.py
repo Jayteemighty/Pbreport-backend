@@ -210,3 +210,5 @@ CELERY_TIMEZONE = "UTC"
 
 PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
 PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
+PAYSTACK_INITIALIZE_PAYMENT_URL = "https://api.paystack.co/transaction/initialize"
+#PAYSTACK_VERIFY_TRANSACTION_URL = "https://api.paystack.co/transaction/verify/"
