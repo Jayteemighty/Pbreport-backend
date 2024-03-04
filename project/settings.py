@@ -207,3 +207,6 @@ CELERY_TIMEZONE = "UTC"
 #        "schedule": 300,  # Run every 5 minutes (300 seconds)
 #    },
 #}
+
+PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
+PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
