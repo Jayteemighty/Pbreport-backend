@@ -1,4 +1,4 @@
-import stripe
+import requests
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from .models import Order, OrderItem
 from .serializers import OrderSerializer, MyOrderSerializer
 
+
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
@@ -20,24 +21,21 @@ def checkout(request):
     serializer = OrderSerializer(data=request.data)
 
     if serializer.is_valid():
-        stripe.api_key = settings.STRIPE_SECRET_KEY
+        # Calculate the total paid amount
         paid_amount = sum(item.get('quantity') * item.get('product').price for item in serializer.validated_data['items'])
 
         try:
-            charge = stripe.Charge.create(
-                amount=int(paid_amount * 100),
-                currency='USD',
-                description='Charge',
-                source=serializer.validated_data['stripe_token']
-            )
-
-            serializer.save(user=request.user, paid_amount=paid_amount)
-
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            # Call the verify_payment method to verify the payment using Paystack API
+            if request.user.order.verify_payment(serializer.validated_data['reference']):
+                serializer.save(user=request.user, paid_amount=paid_amount)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({'error': 'Payment verification failed'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class OrdersList(APIView):
     authentication_classes = [authentication.TokenAuthentication]
