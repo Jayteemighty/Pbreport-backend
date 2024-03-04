@@ -14,6 +14,8 @@ from .models import Order, OrderItem
 from .serializers import OrderSerializer, MyOrderSerializer
 
 
+api_key = settings.PAYSTACK_SECRET_KEY
+url = settings.PAYSTACK_INITIALIZE_PAYMENT_URL
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
