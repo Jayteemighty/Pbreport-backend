@@ -36,10 +36,31 @@ class Order(models.Model):
         return self.amount * 100
 
     def verify_payment(self, reference):
-        # Logic to verify payment with Paystack API using the provided reference
-        # If payment is successful, set payment_verified to True and update paid_amount
-        # You need to implement this method based on your Paystack integration strategy
-        pass
+        # Paystack API endpoint for verifying transactions
+        PAYSTACK_VERIFY_URL = 'https://api.paystack.co/transaction/verify/'
+
+        # Set your Paystack secret key from Django settings
+        paystack_secret_key = settings.PAYSTACK_SECRET_KEY
+
+        # Make a request to the Paystack API to verify the transaction
+        response = requests.get(PAYSTACK_VERIFY_URL + reference, headers={
+            'Authorization': f'Bearer {paystack_secret_key}'
+        })
+
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            data = response.json()
+            # Check if the transaction was successful
+            if data['data']['status'] == 'success':
+                # Update the order details
+                self.payment_verified = True
+                self.paid_amount = data['data']['amount'] / 100  # Paystack amount is in kobo, so divide by 100
+                self.save()
+                return True  # Payment verified successfully
+            else:
+                return False  # Payment verification failed
+        else:
+            return False  # Payment verification failed
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
