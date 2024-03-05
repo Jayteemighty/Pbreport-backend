@@ -39,4 +39,22 @@ def paystack_webhook(request):
         # Invalid signature
         return HttpResponse(status=400)
 
-    
+    if event == 'charge.success':
+        # If event status equals 'charge.success'
+        # Get the data and the `order_id` 
+        # we'd set in the metadata earlier
+        data, order_id = body["data"], body['data']['metadata']['order_id']
+
+        # Validate status and gateway_response
+        if (data["status"] == 'success') and (data["gateway_response"] == "Successful"):
+            try:
+                order = Order.objects.get(id=order_id)
+            except Order.DoesNotExist:
+                return HttpResponse(status=404)
+            # Mark order as paid
+            order.paid_amount = data["amount"] / 100  # Convert from kobo to naira
+            order.save(update_fields=["paid_amount"])
+
+            print("Order marked as paid")
+
+    return HttpResponse(status=200)
