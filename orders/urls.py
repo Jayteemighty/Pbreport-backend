@@ -5,5 +5,5 @@ from orders import views
 urlpatterns = [
     path('checkout/', views.checkout),
     path('orders/', views.OrdersList.as_view()),  
-    path('webhook/', wh.stack_webhook, name='stack-webhook'),
+    path('webhook/', wh.paystack_webhook, name='paystack-webhook'),
 ]
