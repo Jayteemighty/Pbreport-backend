@@ -9,10 +9,14 @@ from django_otp.oath import TOTP
 from django.core.mail import send_mail
 from django.conf import settings
 
+from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
+
 class SignupView(generics.CreateAPIView):
     serializer_class = UserSerializer
     queryset = get_user_model().objects.all()
 
+    @extend_schema(responses=UserSerializer)
     def perform_create(self, serializer):
         password = serializer.validated_data.get('password')
         email = serializer.validated_data.get('email')

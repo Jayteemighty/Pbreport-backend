@@ -27,8 +27,8 @@ urlpatterns = [
     path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
-    path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('schema/docs/', SpectacularSwaggerView.as_view(url_name='schema'))
+    path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/v1/schema/docs/', SpectacularSwaggerView.as_view(url_name='schema'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()
