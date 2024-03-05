@@ -13,8 +13,8 @@ from rest_framework.response import Response
 from .models import Order, OrderItem
 from .serializers import OrderSerializer, MyOrderSerializer
 
-from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
+#from rest_framework.response import Response
+#from drf_spectacular.utils import extend_schema
 
 
 api_key = settings.PAYSTACK_SECRET_KEY
@@ -22,7 +22,6 @@ url = settings.PAYSTACK_INITIALIZE_PAYMENT_URL
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
-@extend_schema(responses=OrderSerializer)
 def checkout(request):
     serializer = OrderSerializer(data=request.data)
 
@@ -47,7 +46,6 @@ class OrdersList(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
-    @extend_schema(responses=MyOrderSerializer)
     def get(self, request, format=None):
         orders = Order.objects.filter(user=request.user)
         serializer = MyOrderSerializer(orders, many=True)
