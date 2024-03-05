@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'rest_framework_simplejwt',
     'django_celery_results',
-    'rest_framework.authtoken',
     'django_filters',
     'dj_rest_auth',
     'django_otp',
